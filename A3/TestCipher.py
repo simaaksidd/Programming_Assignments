@@ -114,14 +114,18 @@ print(rail_fence_decode('holelwrdlo', 3))
 
 
 
-'''
+
 #  Input: strng is a string of characters
 #  Output: function converts all characters to lower case and then
 #          removes all digits, punctuation marks, and spaces. It
 #          returns a single string with only lower case characters
 def filter_string ( strng ):
-  return ""	# placeholder for the actual return statement
+  temp = [i for i in strng if (ord(i) <= 122 and ord(i) >= 97)]
+  return "".join(temp)
 
+print(filter_string('SERFYHUWE20347sdlhfwerkt][;/.==-!#^%&(*^$%#^$`~~```~~~;][L[PWR20Jhfjhf'))
+
+'''
 #  Input: p is a character in the pass phrase and s is a character
 #         in the plain text
 #  Output: function returns a single character encoded using the 
