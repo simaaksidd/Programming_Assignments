@@ -113,6 +113,7 @@ def rail_fence_decode ( strng, key ):
 #          removes all digits, punctuation marks, and spaces. It
 #          returns a single string with only lower case characters
 def filter_string ( strng ):
+    strng = strng.lower()
     temp = [i for i in strng if (ord(i) <= 122 and ord(i) >= 97)]
     return "".join(temp)
 
@@ -205,7 +206,7 @@ def main():
     print("Encoded Text: " + encoded_text)
     print("Pass Phrase: " + pass_phrase)
     print("Decoded Text: " + vigenere_decode(encoded_text, pass_phrase))
-  
+    print()
 # The line above main is for grading purposes only.
 # # DO NOT REMOVE THE LINE ABOVE MAIN
 if __name__ == "__main__":
