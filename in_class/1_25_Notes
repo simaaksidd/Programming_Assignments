@@ -1,0 +1,29 @@
+import math 
+
+class Point(object):
+    # every class inherits from the object class
+    # constructor
+    def __init__ (self, x=0, y=0):
+        self.x = x
+        self.x = y
+    def circle_overlaps(self, c):
+        return ((not self.circle_inside(c)) and (not self.circle_outside(c)))
+
+
+# Let's do A4 notes now 
+
+# how to determine if a cube is in a sphere
+# if all 8 points of a cube are inside the sphere then its in the sphere
+
+# determine if a sphere instersects another sphere
+# if a sphere is not strictly inside and not strictly outside then it intersects
+
+# determine if a point is a cube
+# if point x is strictly between xmax and xmin, 
+# if point y is strictly between ymax and ymin
+# if point z is strictly between zmax and zmin 
+
+# determine if a cube intersects a cube
+# if a cube is not strictly inside and not strictly outside then it intersects
+
+# most of these are finding the max and min x,y,z values to find the 
