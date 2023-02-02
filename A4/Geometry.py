@@ -140,7 +140,7 @@ class Cube (object):
     # the order is the top corners first, going in clockwise
     # direction, then the bottom corners, going in clockwise
     # direction 
-    corner1 = Point(self.center.x + ((self.side/2))  , (self.center.y + (self.side/2)), (self.center.z + (self.side/2)))
+    corner1 = Point(self.center.x + ((self.side/2)), (self.center.y + (self.side/2)), (self.center.z + (self.side/2)))
     corner2 = Point(self.center.x  + ((self.side/2)), (self.center.y - (self.side/2)), (self.center.z + (self.side/2)))
     corner3 = Point(self.center.x - ((self.side/2)), (self.center.y - (self.side/2)), (self.center.z + (self.side/2)))
     corner4 = Point(self.center.x - ((self.side/2)), (self.center.y + (self.side/2)), (self.center.z + (self.side/2)))
@@ -151,6 +151,12 @@ class Cube (object):
 
     self.corners = [corner1, corner2, corner3, corner4, corner5, corner6, corner7, corner8]
 
+    self.minx = min(self.center.x + (self.side / 2),  self.center.x - (self.side / 2))
+    self.maxx = max(self.center.x + (self.side / 2),  self.center.x - (self.side / 2))
+    self.miny = min(self.center.y + (self.side / 2),  self.center.y - (self.side / 2))
+    self.maxy = max(self.center.y + (self.side / 2),  self.center.y - (self.side / 2))
+    self.minz = min(self.center.z + (self.side / 2),  self.center.z - (self.side / 2))
+    self.maxz = max(self.center.z + (self.side / 2),  self.center.z - (self.side / 2))
 
   # string representation of a Cube of the form: 
   # Center: (x, y, z), Side: value
@@ -197,14 +203,23 @@ class Cube (object):
             return False
     return True
   
+  # determine if a point is an inside or border point
+  # p is a point
+  # returns a Boolean
+  def is_inside_or_border_point(self,p):
+    return self.minx <= p.x <= self.maxx and self.miny <= p.y <= self.maxy \
+      and self.minz <= p.z <= self.maxz
+  
   # determine if another Cube is strictly outside this Cube
   # other is a Cube object
   # returns a Boolean
   def is_outside_cube(self, other):
-    if self.center.distance(other.center) > 0.5*(self.side + other.side):
-      return True
-    else:
-      return False
+    for point in other.corners:
+      if not self.is_inside_or_border_point(point):
+        continue
+      else:
+        return False
+    return True
 
   # determine if another Cube intersects this Cube
   # two Cube objects intersect if they are not strictly
@@ -212,10 +227,9 @@ class Cube (object):
   # other is a Cube object
   # returns a Boolean
   def does_intersect_cube (self, other):
-    if self.side >= other.side:
-      return not self.is_inside_cube(other) and not self.is_outside_cube(other)
-    else:
-      return not other.is_inside_cube(self) and not other.is_outside_cube(self)
+    return not self.is_inside_cube(other) and \
+      not other.is_inside_cube(self) and not self.is_outside_cube(other) \
+        and not other.is_outside_cube(self)
 
   # determine the volume of intersection if this Cube 
   # intersects with another Cube
