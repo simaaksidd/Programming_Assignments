@@ -80,9 +80,9 @@ class Sphere (object):
   # other is a Sphere object
   # returns a Boolean
   def is_inside_sphere (self, other):
-    if self.center.distance(other.center) + other.radius >= self.radius:
-        return False
-    return True
+    if self.center.distance(other.center) + other.radius < self.radius:
+        return True
+    return False
   # determine if a Cube is strictly inside this Sphere
   # determine if the eight corners of the Cube are strictly 
   # inside the Sphere
@@ -104,20 +104,16 @@ class Sphere (object):
     if self.center.distance(a_cube.center) < self.radius + (a_cube.side / math.sqrt(2)):
         return False
     return True
-  # determine if another Sphere is strictly outisde this Sphere
-  # other is a Sphere object
-  # returns a Boolean  
-  def is_outside_sphere(self, other):
-    if abs(self.radius) + abs(other.radius) > self.center.distance(other.center):
-        return False
-    return True
   # determine if another Sphere intersects this Sphere
   # other is a Sphere object
   # two spheres intersect if they are not strictly inside
   # or not strictly outside each other
   # returns a Boolean
   def does_intersect_sphere (self, other):
-    return ((not self.is_inside_sphere(other) and not self.is_outside_sphere(other)))  
+    if self.radius >= other.radius:
+      return ((not self.is_inside_sphere(other) and (self.center.distance(other.center) <= (self.radius + other.radius))))
+    else:
+      return ((not other.is_inside_sphere(self) and (self.center.distance(other.center) <= (self.radius + other.radius))))
   # determine if a Cube intersects this Sphere
   # the Cube and Sphere intersect if they are not
   # strictly inside or not strictly outside the other
@@ -205,7 +201,7 @@ class Cube (object):
   # other is a Cube object
   # returns a Boolean
   def is_outside_cube(self, other):
-    if self.center.distance(other.center) > self.side and self.center.distance(other.center) > other.side:
+    if self.center.distance(other.center) > 0.5*(self.side + other.side):
       return True
     else:
       return False
@@ -216,8 +212,10 @@ class Cube (object):
   # other is a Cube object
   # returns a Boolean
   def does_intersect_cube (self, other):
-    return not self.is_inside_cube(other) and \
-        not self.is_outside_cube(other)
+    if self.side >= other.side:
+      return not self.is_inside_cube(other) and not self.is_outside_cube(other)
+    else:
+      return not other.is_inside_cube(self) and not other.is_outside_cube(self)
 
   # determine the volume of intersection if this Cube 
   # intersects with another Cube
