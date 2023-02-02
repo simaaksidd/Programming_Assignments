@@ -231,17 +231,17 @@ class Cube (object):
   # other is a Cube object
   # returns a Boolean
   def is_outside_cube(self, other):
-    if other.minx < self.minx and other.maxx < self.minx:
+    if other.minx <= self.minx and other.maxx <= self.minx:
       return True
-    elif other.minx > self.maxx and other.maxx > self.maxx:
+    elif other.minx >= self.maxx and other.maxx >= self.maxx:
       return True
-    elif other.miny < self.miny and other.maxy < self.miny:
+    elif other.miny <= self.miny and other.maxy <= self.miny:
       return True
-    elif other.miny > self.maxy and other.maxy > self.maxy:
+    elif other.miny >= self.maxy and other.maxy >= self.maxy:
       return True
-    elif other.minz < self.minz and other.maxz < self.minz:
+    elif other.minz <= self.minz and other.maxz <= self.minz:
       return True
-    elif other.minz > self.maxz and other.maxz > self.maxz:
+    elif other.minz >= self.maxz and other.maxz >= self.maxz:
       return True
     else:
       return False
@@ -252,10 +252,10 @@ class Cube (object):
   # other is a Cube object
   # returns a Boolean
   def does_intersect_cube (self, other):
-    return not self.is_inside_cube(other) and \
-      not other.is_inside_cube(self) \
-        and not self.is_outside_cube(other) \
-        and not other.is_outside_cube(self)
+    if self.side >= other.side:
+      return (not self.is_inside_cube(other) and not self.is_outside_cube(other))
+    elif self.side < other.side:
+      return (not other.is_inside_cube(self) and not other.is_outside_cube(self))
 
   # determine the volume of intersection if this Cube 
   # intersects with another Cube
