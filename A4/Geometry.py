@@ -252,10 +252,10 @@ class Cube (object):
   # other is a Cube object
   # returns a Boolean
   def does_intersect_cube (self, other):
-    return not self.is_inside_cube(other) \
-      and not other.is_inside_cube(self) \
-      and not self.is_outside_cube(other) \
-      and not other.is_outside_cube(self)
+    return not self.is_inside_cube(other) and \
+      not other.is_inside_cube(self) \
+        and not self.is_outside_cube(other) \
+        and not other.is_outside_cube(self)
 
   # determine the volume of intersection if this Cube 
   # intersects with another Cube
