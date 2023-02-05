@@ -25,12 +25,6 @@ def area (rect):
   y = rect[3] - rect[1]
   return abs(x * y)
 
-# Input: two rectangles in the form of tuples of 4 integers
-# Output: a tuple of 4 integers denoting the overlapping rectangle.
-#         return (0, 0, 0, 0) if there is no overlap
-def overlap (rect1, rect2):
-  x = rect1[3] - rect2[1]
-
 def createBldg(x, y):
   building = []
   for i in range(y):
@@ -51,6 +45,58 @@ name2 = 2
 
 
 updateBuilding = assignSpace(assignSpace(building, name1, 5,5,7,7), name2, 6,6,8,8)
+
+# Input: two rectangles in the form of tuples of 4 integers
+# Output: a tuple of 4 integers denoting the overlapping rectangle.
+#         return (0, 0, 0, 0) if there is no overlap
+def overlap (rect1, rect2):
+  xMax = max(rect1[2], rect2[2])
+  yMax = max(rect1[3], rect2[3])
+  building = createBldg(xMax, yMax)
+  building = assignSpace(
+    building, 1, rect1[0], rect1[1], rect1[2], rect1[3])
+  building = assignSpace(
+    building, 2, rect2[0], rect2[1], rect2[2], rect2[3])
+  
+  # traverse the building in search for overlap
+  dummyBuilding = createBldg(xMax, yMax)
+  for i in range(len(building)):
+    for j in range(len(building[i])):
+      if len(building[i][j]) > 1:
+        dummyBuilding[i][j] = 1
+  
+  # create vector that will store useful information on indexing
+  y = []
+  y_value = 1
+
+  # y will store which indexes of dummybuilding contain 
+  # the y coordinates
+  for row in dummyBuilding:
+    if 1 in row:
+      y.append(y_value)
+      y_value += 1
+    else:
+      y.append(0)
+
+  # check if y indicates an overlap
+  if 1 in y:
+    # if so, get coordinates
+    overlapMinY = y.index(1)
+    overlapMinX = dummyBuilding[overlapMinY].index(1)
+    overlapMaxY = overlapMinY + y_value - 1
+    rowOfInterest = dummyBuilding[overlapMinY][::-1]
+    overlapMaxX = len(dummyBuilding[overlapMaxY]) \
+      - rowOfInterest.index(1)
+
+    return (overlapMinX, overlapMinY, overlapMaxX, overlapMaxY)
+  
+  # otherwise, no coordinates
+  return (0,0,0,0)
+
+
+print(updateBuilding)
+print(overlap((5,5,7,7), (5,6,7,10)))
+  
 
 # Input: bldg is a 2-D array representing the whole office space
 # Output: a single integer denoting the area of the unallocated 
@@ -98,8 +144,6 @@ def uncontested_space (bldg, rect):
   return specialSpace
 uncontested_space(updateBuilding, (5,6,7,10))
 
-
-'''
 # Input: office is a rectangle in the form of a tuple of 4 integers
 #        representing the whole office space
 #        cubicles is a list of tuples of 4 integers representing all
@@ -107,15 +151,43 @@ uncontested_space(updateBuilding, (5,6,7,10))
 # Output: a 2-D list of integers representing the office building and
 #         showing how many employees want each cell in the 2-D list
 def request_space (office, cubicles):
+  # create the matrix representation of the office
+  building = createBldg(office[2], office[3])
+  nameID = 1
+  # assign space to each person that requests a cubicle
+  for cubicle in cubicles:
+    building = assignSpace(
+      building, nameID, cubicle[0], 
+      cubicle[1], cubicle[2], cubicle[3])
+    nameID += 1
+  # by completion of loop, we should have a 2-D list 
+  # with integers where each integer corresponds to a 
+  # unique person that is requesting a cubicle
+
+  # loop replaces each entry within the constructed 2-D 
+  # list with the length of said entry
+  for i in range(len(building)):
+    for j in range(len(building[i])):
+      building[i][j] = len(building[i][j])
+  
+  return building
+  
+office1 = (0,0,10,10)
+cubicles1 = [(5,6,7,10), (5,5,7,7), (6,6,8,8)]
+
+print(request_space(office1, cubicles1))
 
 # Input: no input
 # Output: a string denoting all test cases have passed
 def test_cases ():
+  # area test cases
   assert area ((0, 0, 1, 1)) == 1
+  assert area ((5,6,7,10)) == 8
   # write your own test cases
 
   return "all test cases passed"
 
+'''
 def main():
   # read the data
 
