@@ -18,13 +18,13 @@ class Card():
 
     # string rapresentation of a Card object
     def __str__(self):
-        if self.rank == '14':
+        if self.rank ==   14:
             rank = 'A'
-        elif self.rank == 12:
+        elif self.rank == 13:
             rank = 'K'
-        elif self.rank == 11:
+        elif self.rank == 12:
             rank = 'Q'
-        elif self.rank == 10:
+        elif self.rank == 11:
             rank = 'J'
         else:
             rank = str(self.rank)
@@ -81,7 +81,7 @@ class Poker ():
             hand = [] 
             for j in range(self.numCards_in_Hand):
                 hand.append(self.deck.deal())
-            self.all_hands.apppend(hand)
+            self.all_hands.append(hand)
         
     def play(self):
         # sort the hands of each player and print
@@ -92,3 +92,62 @@ class Poker ():
             for card in sorted_hand:
                 hand_str = hand_str + str(card) + ' '
             print('Player: ' + str(i + 1) + ': ' + hand_str)
+    
+    def is_royal(self, hand):
+        # determine if a hand is a royal flush
+        # takes as argument a list of 5 Card objects
+        # returns a number of points for that hand
+        suit_set = {}
+        #for i in range(len(hand-1)):
+        #    same_suit = same_suit and (hand[i].suit == hand[i+1].suit)
+        for card in hand():
+            suit_set.add(card.suit)
+        if len(suit_set) == 1:
+            same_suit = True
+        else:
+            same_suit = False
+        
+        if not same_suit:
+            return 0, ''
+        
+        rank_order = True
+        for i in range(len(hand)):
+            rank_order = rank_order and (hand[i].rank == 14-i)
+        
+        if not rank_order:
+            return 0, ''
+        
+        #determine the points
+        points = 10* 15 ** 5 + (hand[0].rank) * 15 ** 4 + (hand[1].rank) \
+            * 15 ** 3 + (hand[2].rank) * 15 ** 2 + (hand[3].rank) * 15 ** 1 + (hand[4].rank)
+        return points, 'Royal Flush'
+    
+    def is_straight_flush(self, hand):
+        ...
+    def is_four_kind(self, hand):
+        ...
+    def is_full_house(self, hand):
+        ...
+    def is_flush(self, hand):
+        ...
+    def is_straight(self, hand):
+        ...
+    def is_three_kind(self, hand):
+        ...
+    def is_two_pair(self, hand):
+        ...
+    def is_one_pair(self, hand):
+        ...
+    def is_high_card(self, hand):
+        ...
+
+def main():
+    num_players = int(input("Enter the number of players: "))
+    while (num_players < 2) or (num_players > 6):
+        num_players = int(input("Enter the number of players: "))
+
+    game = Poker(num_players)
+
+    game.play()
+
+main()
