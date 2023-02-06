@@ -98,6 +98,7 @@ def uncontested_space (bldg, rect):
   return specialSpace
 uncontested_space(updateBuilding, (5,6,7,10))
 
+
 '''
 # Input: office is a rectangle in the form of a tuple of 4 integers
 #        representing the whole office space
