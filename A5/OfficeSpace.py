@@ -47,51 +47,40 @@ def assignSpace(bldg, nameID, rect):
   return bldg
 
 # Input: two rectangles in the form of tuples of 4 integers
+# Output: a boolean describing if the two rectangles overlap
+def doesOverlap(r1, r2):
+  rect1min = (r1[0], r1[1])
+  rect2min = (r2[0], r2[1])
+  rect1max = (r1[2], r1[3])
+  rect2max = (r2[2], r2[3])
+
+  # If the squares are the same, then they do overlap
+  if rect1max == rect2min or rect2min == rect1max:
+    return True
+  # Rectangles are to the left/right of eachother
+  if rect1max[0] <= rect2min[0] or rect2max[0] <= rect1min[0]:
+    return False 
+  # Rectangles are above/below eachother
+  if rect1max[1] <= rect2min[1] or rect2max[1] <= rect1min[1]:
+    return False
+  
+  return True
+
+# Input: two rectangles in the form of tuples of 4 integers
 # Output: a tuple of 4 integers denoting the overlapping rectangle.
 #         return (0, 0, 0, 0) if there is no overlap
 def overlap (rect1, rect2):
-  xMax = max(rect1[2], rect2[2])
-  yMax = max(rect1[3], rect2[3])
-  building = createBldg(xMax, yMax)
-  building = assignSpace(
-    building, 1, (rect1[0], rect1[1], rect1[2], rect1[3]))
-  building = assignSpace(
-    building, 2, (rect2[0], rect2[1], rect2[2], rect2[3]))
-  
-  # traverse the building in search for overlap
-  dummyBuilding = createBldg(xMax, yMax)
-  for i in range(len(building)):
-    for j in range(len(building[i])):
-      if len(building[i][j]) > 1:
-        dummyBuilding[i][j] = 1
-  
-  # create vector that will store useful information on indexing
-  y = []
-  y_value = 1
 
-  # y will store which indexes of dummybuilding contain 
-  # the y coordinates
-  for row in dummyBuilding:
-    if 1 in row:
-      y.append(y_value)
-      y_value += 1
-    else:
-      y.append(0)
-
-  # check if y indicates an overlap
-  if 1 in y:
-    # if so, get coordinates
-    overlapMinY = y.index(1)
-    overlapMinX = dummyBuilding[overlapMinY].index(1)
-    overlapMaxY = overlapMinY + y_value - 1
-    rowOfInterest = dummyBuilding[overlapMinY][::-1]
-    overlapMaxX = len(dummyBuilding[overlapMaxY]) \
-      - rowOfInterest.index(1)
-
-    return (overlapMinX, overlapMinY, overlapMaxX, overlapMaxY)
+  if not doesOverlap(rect1, rect2):
+    return (0, 0, 0, 0)
+  larger_minimum_x = max(rect1[0], rect2[0])
+  smaller_maximum_y = min(rect1[3], rect2[3])
   
-  # otherwise, no coordinates
-  return (0,0,0,0)
+  larger_minimum_y = max(rect1[1], rect2[1])
+  smaller_maximum_x = min(rect1[2], rect2[2])
+  
+
+  return (larger_minimum_x, larger_minimum_y, smaller_maximum_x, smaller_maximum_y)
 
 # Input: bldg is a 2-D array representing the whole office space
 # Output: a single integer denoting the area of the unallocated 
@@ -124,16 +113,11 @@ def contested_space (bldg):
 #        representing the cubicle requested by an employee
 # Output: a single integer denoting the area of the uncontested 
 #         space in the office that the employee gets
-def uncontested_space (bldg, rect):  
+def uncontested_space (bldg, rect):
   specialSpace = 0
-  county = -1
-  for aisle in bldg:
-    county += 1
-    countx = -1
-    for space in aisle:
-      countx += 1
-    # if the point is in between the rect coords and the length is 1 then we want to add 1 to specialspace
-      if rect[0] <= countx <= rect[2] and rect[1] <= county <= rect[3] and len(space) == 1:
+  for i in range(rect[1], rect[3]):
+    for j in range(rect[0], rect[2]):
+      if len(bldg[i][j]) == 1:
         specialSpace += 1
   return specialSpace
 
@@ -165,9 +149,6 @@ def request_space (office, cubicles):
   
   return building
   
-office1 = (0,0,10,10)
-cubicles1 = [(5,6,7,10), (5,5,7,7), (6,6,8,8)]
-
 # Input: no input
 # Output: a string denoting all test cases have passed
 def test_cases ():
@@ -200,6 +181,7 @@ def main():
     employee_IDs[int(i)] = employee[0]
     employee_rects.append(((int(employee[1]), int(employee[2]), int(employee[3]), int(employee[4]))))
     office = assignSpace(office, i, employee_rects[-1])
+
   # run your test cases
   '''
   print (test_cases())
@@ -216,9 +198,8 @@ def main():
   print('Contested ' + str(contested_space(office)))
 
   # compute the uncontested space that each employee gets
-  print(str(employee_IDs[1]) + ' ' + str(uncontested_space(office, employee_rects[0])))
-  print(str(employee_IDs[2]) + ' ' + str(uncontested_space(office, employee_rects[1])))
-  print(str(employee_IDs[3]) + ' ' + str(uncontested_space(office, employee_rects[2])))
+  for j in range(1, x + 1):
+    print(str(employee_IDs[j]) + ' ' + str(uncontested_space(office, employee_rects[j-1])))
 
 if __name__ == "__main__":
   main()
