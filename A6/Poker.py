@@ -115,15 +115,68 @@ class Poker (object):
       hand_str = ''
       for card in sorted_hand:
         hand_str = hand_str + str (card) + ' '
-      print ('Player ' + str(i + 1) + ' : ' + hand_str)
+      print ('Player ' + str(i + 1) + ': ' + hand_str)
+    
+    print()
 
     # determine the type of each hand and print
     hand_type = []	# create a list to store type of hand
     hand_points = []	# create a list to store points for hand
+    
+    
+    for i in range(len(self.players_hands)):
+      if self.is_royal(self.players_hands[i])[0]:
+        hand_type.append(self.is_royal(self.players_hands[i])[1])
+        hand_points.append(self.is_royal(self.players_hands[i])[0])
+      elif self.is_straight_flush(self.players_hands[i])[0]:
+        hand_type.append(self.is_straight_flush(self.players_hands[i])[1])
+        hand_points.append(self.is_straight_flush(self.players_hands[i])[0])
+      elif self.is_four_kind(self.players_hands[i])[0]:
+        hand_type.append(self.is_four_kind(self.players_hands[i])[1])
+        hand_points.append(self.is_four_kind(self.players_hands[i])[0])
+      elif self.is_full_house(self.players_hands[i])[0]:
+        hand_type.append(self.is_full_house(self.players_hands[i])[1])
+        hand_points.append(self.is_full_house(self.players_hands[i])[0])
+      elif self.is_flush(self.players_hands[i])[0]:
+        hand_type.append(self.is_flush(self.players_hands[i])[1])
+        hand_points.append(self.is_flush(self.players_hands[i])[0])
+      elif self.is_straight(self.players_hands[i])[0]:
+        hand_type.append(self.is_straight(self.players_hands[i])[1])
+        hand_points.append(self.is_straight(self.players_hands[i])[0])
+      elif self.is_three_kind(self.players_hands[i])[0]:
+        hand_type.append(self.is_three_kind(self.players_hands[i])[1])
+        hand_points.append(self.is_three_kind(self.players_hands[i])[0])
+      
+      #elif self.is_two_pair(self.players_hands[i])[0]:
+      #  hand_type.append(self.is_two_pair(self.players_hands[i])[1])
+      #  hand_points.append(self.is_two_pair(self.players_hands[i])[0])
+      
+      elif self.is_one_pair(self.players_hands[i])[0]:
+        hand_type.append(self.is_one_pair(self.players_hands[i])[1])
+        hand_points.append(self.is_one_pair(self.players_hands[i])[0])
+      else:
+        hand_type.append(self.is_high_card(self.players_hands[i])[1])
+        hand_points.append(self.is_high_card(self.players_hands[i])[0])
+      print(f'Player {i+1}: {hand_type[i]}')
+  
+    # check for ties
+    tie_set = set()
+    tie_list = []
+    for i in range(len(hand_type)):
+      if hand_type[i] in tie_set:
+        tie_list.append(hand_points[i])
+      else:
+        tie_set.add(hand_type[i])
+    tie_list = sorted(tie_list, reverse=True)
+    
+    if tie_list:
+      for x in range(len(tie_list)):
+        print(f'Player {hand_points.index(tie_list[x])} tied.')
+    else:
+      print(f'Player {hand_points.index(max(hand_points))+1} wins.')
 
 
-    # determine winner and print
-
+    
 
   # determine if a hand is a royal flush
   # takes as argument a list of 5 Card objects
