@@ -115,7 +115,7 @@ class Poker (object):
       hand_str = ''
       for card in sorted_hand:
         hand_str = hand_str + str (card) + ' '
-      print ('Player ' + str(i + 1) + ': ' + hand_str)
+      print ('Player ' + str(i + 1) + ' : ' + hand_str)
     
     print()
 
@@ -156,6 +156,31 @@ class Poker (object):
         hand_type.append(self.is_high_card(self.players_hands[i])[1])
         hand_points.append(self.is_high_card(self.players_hands[i])[0])
       print(f'Player {i+1}: {hand_type[i]}')
+    
+    # printing the winner
+    print()
+    # first we want to find the best hand type
+    winner = hand_type[hand_points.index(max(hand_points))]
+    # start dupe count at -1 because 1 dupe is when 2 match
+    dupe_count = -1
+    # list of the point values of the dupes
+    dupe_list = []
+    # then we want to check if that hand type has any duplicates
+    for i in range(len(hand_type)):
+      if hand_type[i] == winner:
+        dupe_count += 1
+        dupe_list.append(hand_points[i])
+    # if there are duplicates, run the tie function
+    if dupe_count > 0:
+      # check for ties
+      # find the largest value, then remove the largest value
+      for i in range(len(dupe_list)):
+        largest_value = hand_points.index(max(dupe_list))
+        print(f'Player {largest_value + 1} ties.')
+        dupe_list.remove(max(dupe_list))
+    # if there are not duplicates, run the print statement
+    else:
+      print(f'Player {hand_points.index(max(hand_points))+1} wins.')
 
   # determine if a hand is a royal flush
   # takes as argument a list of 5 Card objects
