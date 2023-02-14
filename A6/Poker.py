@@ -106,24 +106,6 @@ class Poker (object):
         hand.append (self.deck.deal())
       self.players_hands.append (hand)
 
-  # simulate the play of poker
-  def play (self):
-    # sort the hands of each player and print
-    for i in range (len(self.players_hands)):
-      sorted_hand = sorted (self.players_hands[i], reverse = True)
-      self.players_hands[i] = sorted_hand
-      hand_str = ''
-      for card in sorted_hand:
-        hand_str = hand_str + str (card) + ' '
-      print ('Player ' + str(i + 1) + ' : ' + hand_str)
-
-    # determine the type of each hand and print
-    hand_type = []	# create a list to store type of hand
-    hand_points = []	# create a list to store points for hand
-
-
-    # determine winner and print
-
 
   # determine if a hand is a royal flush
   # takes as argument a list of 5 Card objects
@@ -385,6 +367,26 @@ class Poker (object):
     points = points + (hand[4].rank)
     
     return points, 'High Card'
+  
+  # simulate the play of poker
+  def play (self):
+    # sort the hands of each player and print
+    for i in range (len(self.players_hands)):
+      sorted_hand = sorted (self.players_hands[i], reverse = True)
+      self.players_hands[i] = sorted_hand
+      hand_str = ''
+      for card in sorted_hand:
+        hand_str = hand_str + str (card) + ' '
+      print ('Player ' + str(i + 1) + ' : ' + hand_str)
+
+      
+
+    # determine the type of each hand and print
+    hand_type = []	# create a list to store type of hand
+    hand_points = []	# create a list to store points for hand
+
+
+    # determine winner and print
 
 def main():
   # read number of players from stdin
