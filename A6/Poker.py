@@ -342,52 +342,53 @@ class Poker (object):
         break
     
     two_pair = False
-    if k <=1: 
+    if one_pair: 
       for i in range(k + 2, len(hand)-1):
         if (hand[i].rank == hand[i + 1].rank):
           two_pair = True
           j = i
           break
 
-    if (not one_pair) or (not two_pair):
-      return 0, ''
-    
-    if hand[k].rank > hand[j].rank:
-      one_pair_higher_ranking = True
+    if one_pair and two_pair:
+      if hand[k].rank > hand[j].rank:
+        one_pair_higher_ranking = True
+      
+      else:
+        one_pair_higher_ranking = False
+
+      if one_pair_higher_ranking:
+        if j-k > 2 and k == 0:
+          points = points_alloted * 15 ** 5 + (hand[k].rank) * 15 ** 4 + (hand[k+1].rank) * 15 ** 3
+          points = points + (hand[j].rank) * 15 ** 2 + (hand[j+1].rank) * 15 ** 1
+          points = points + (hand[2].rank)
+        elif j-k == 2 and k ==0:
+          points = points_alloted * 15 ** 5 + (hand[k].rank) * 15 ** 4 + (hand[k+1].rank) * 15 ** 3
+          points = points + (hand[j].rank) * 15 ** 2 + (hand[j+1].rank) * 15 ** 1
+          points = points + (hand[4].rank)
+        else:
+          points = points_alloted * 15 ** 5 + (hand[k].rank) * 15 ** 4 + (hand[k+1].rank) * 15 ** 3
+          points = points + (hand[j].rank) * 15 ** 2 + (hand[j+1].rank) * 15 ** 1
+          points = points + (hand[0].rank)
+      
+      if (not one_pair_higher_ranking):
+        if j-k > 2 and k == 0:
+          points = points_alloted * 15 ** 5 + (hand[j].rank) * 15 ** 4 + (hand[j+1].rank) * 15 ** 3
+          points = points + (hand[k].rank) * 15 ** 2 + (hand[k+1].rank) * 15 ** 1
+          points = points + (hand[2].rank)
+        elif j-k == 2 and k ==0:
+          points = points_alloted * 15 ** 5 + (hand[j].rank) * 15 ** 4 + (hand[j+1].rank) * 15 ** 3
+          points = points + (hand[k].rank) * 15 ** 2 + (hand[k+1].rank) * 15 ** 1
+          points = points + (hand[4].rank)
+        else:
+          points = points_alloted * 15 ** 5 + (hand[j].rank) * 15 ** 4 + (hand[j+1].rank) * 15 ** 3
+          points = points + (hand[k].rank) * 15 ** 2 + (hand[k+1].rank) * 15 ** 1
+          points = points + (hand[0].rank)
+
+
+      return points, 'Two Pair'
     
     else:
-      one_pair_higher_ranking = False
-
-    if one_pair_higher_ranking:
-      if j-k > 2 and k == 0:
-        points = points_alloted * 15 ** 5 + (hand[k].rank) * 15 ** 4 + (hand[k+1].rank) * 15 ** 3
-        points = points + (hand[j].rank) * 15 ** 2 + (hand[j+1].rank) * 15 ** 1
-        points = points + (hand[2].rank)
-      elif j-k == 2 and k ==0:
-        points = points_alloted * 15 ** 5 + (hand[k].rank) * 15 ** 4 + (hand[k+1].rank) * 15 ** 3
-        points = points + (hand[j].rank) * 15 ** 2 + (hand[j+1].rank) * 15 ** 1
-        points = points + (hand[4].rank)
-      else:
-        points = points_alloted * 15 ** 5 + (hand[k].rank) * 15 ** 4 + (hand[k+1].rank) * 15 ** 3
-        points = points + (hand[j].rank) * 15 ** 2 + (hand[j+1].rank) * 15 ** 1
-        points = points + (hand[0].rank)
-    
-    if (not one_pair_higher_ranking):
-      if j-k > 2 and k == 0:
-        points = points_alloted * 15 ** 5 + (hand[j].rank) * 15 ** 4 + (hand[j+1].rank) * 15 ** 3
-        points = points + (hand[k].rank) * 15 ** 2 + (hand[k+1].rank) * 15 ** 1
-        points = points + (hand[2].rank)
-      elif j-k == 2 and k ==0:
-        points = points_alloted * 15 ** 5 + (hand[j].rank) * 15 ** 4 + (hand[j+1].rank) * 15 ** 3
-        points = points + (hand[k].rank) * 15 ** 2 + (hand[k+1].rank) * 15 ** 1
-        points = points + (hand[4].rank)
-      else:
-        points = points_alloted * 15 ** 5 + (hand[j].rank) * 15 ** 4 + (hand[j+1].rank) * 15 ** 3
-        points = points + (hand[k].rank) * 15 ** 2 + (hand[k+1].rank) * 15 ** 1
-        points = points + (hand[0].rank)
-
-
-    return points, 'Two Pair'
+      return 0, ''
 
   # determine if a hand is one pair
   # takes as argument a list of 5 Card objects
@@ -423,26 +424,6 @@ class Poker (object):
     points = points + (hand[4].rank)
     
     return points, 'High Card'
-  
-  # simulate the play of poker
-  def play (self):
-    # sort the hands of each player and print
-    for i in range (len(self.players_hands)):
-      sorted_hand = sorted (self.players_hands[i], reverse = True)
-      self.players_hands[i] = sorted_hand
-      hand_str = ''
-      for card in sorted_hand:
-        hand_str = hand_str + str (card) + ' '
-      print ('Player ' + str(i + 1) + ' : ' + hand_str)
-
-      
-
-    # determine the type of each hand and print
-    hand_type = []	# create a list to store type of hand
-    hand_points = []	# create a list to store points for hand
-
-
-    # determine winner and print
 
 def main():
   # read number of players from stdin
