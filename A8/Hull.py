@@ -1,7 +1,10 @@
 
 #  File: Hull.py
 
-#  Description:
+#  Description: A convex hull is the smallest convex polygon that will 
+#         enclose a set of points. In a convex polygon a line joining
+#         any two points in the polygon will lie completely within the polygon. 
+#         This program creates a convex hull from a given number of points. 
 
 #  Student Name: Simaak Siddiqi
 
