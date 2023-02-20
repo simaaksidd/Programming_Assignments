@@ -3,21 +3,21 @@
 
 #  Description:
 
-#  Student Name:
+#  Student Name: Simaak Siddiqi
 
-#  Student UT EID:
+#  Student UT EID: srs5826
 
-#  Partner Name:
+#  Partner Name: Julian Canales
 
-#  Partner UT EID:
+#  Partner UT EID: jac22779
 
 #  Course Name: CS 313E
 
-#  Unique Number: 
+#  Unique Number: 52038
 
-#  Date Created:
+#  Date Created: 2/19/2023
 
-#  Date Last Modified:
+#  Date Last Modified: 2/20/2023
 
 import sys
 
@@ -106,8 +106,8 @@ def convex_hull (sorted_points):
   # lower hull 
   lower_hull = []
   
-  #  Append the last two points p_n and p_n-1 in order into lower_hull
-  #  with p_n as the first point.
+  # Append the last two points p_n and p_n-1 in order into lower_hull
+  #       with p_n as the first point.
   lower_hull.append(sorted_points[-1])
   lower_hull.append(sorted_points[-2])
 
@@ -116,18 +116,19 @@ def convex_hull (sorted_points):
     # Append p_i to lower_hull
     lower_hull.append(sorted_points[i])
     # While lower_hull contains three or more points and the last three
-    # points in the lower_hull do not make a right turn do
-    while (len(lower_hull) >= 3) and det(lower_hull[-3], lower_hull[-2], lower_hull[-1]) >= 0:
+    #     points in the lower_hull do not make a right turn do
+    while (len(lower_hull) >= 3) and \
+          det(lower_hull[-3], lower_hull[-2], lower_hull[-1]) >= 0:
       # Delete the middle of the last three points from lower_hull
       lower_hull.pop(-2)
 
   # Remove the first and last points for lower_hull to avoid duplication
-  # with points in the upper hull.
+  #       with points in the upper hull.
   lower_hull.pop(0) 
   lower_hull.pop(-1)
 
   # Append the points in the lower_hull to the points in the upper_hull 
-  # and call those points the convex_hull
+  #       and call those points the convex_hull
   convex_hull = upper_hull + lower_hull
 
   # Return the convex_hull.
