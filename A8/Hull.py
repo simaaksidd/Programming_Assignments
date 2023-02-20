@@ -85,7 +85,8 @@ class Point (object):
 # Input: p, q, r are Point objects
 # Output: compute the determinant and return the value
 def det (p, q, r):
-  return
+  return ( ((q.x * r.y) - (r.x * q.y)) - ((p.x * r.y) - (r.x * p.y)) \
+         + ((p.x * q.y) - (q.x * p.y)))
 
 # Input: sorted_points is a sorted list of Point objects
 # Output: computes the convex hull of a sorted list of Point objects
@@ -93,13 +94,60 @@ def det (p, q, r):
 #         extreme left point and going clockwise in order
 #         returns the convex hull
 def convex_hull (sorted_points):
-  return
+  upper_hull = []
+  upper_hull.append(sorted_points[0])
+  upper_hull.append(sorted_points[1])
+  for i in range(2, len(sorted_points)):
+    upper_hull.append(sorted_points[i])
+    while (len(upper_hull) >= 3) and \
+    det(upper_hull[-3], upper_hull[-2], upper_hull[-1]) >= 0:
+      upper_hull.pop(-2)
+  
+  # lower hull 
+  lower_hull = []
+  
+  #  Append the last two points p_n and p_n-1 in order into lower_hull
+  #  with p_n as the first point.
+  lower_hull.append(sorted_points[-1])
+  lower_hull.append(sorted_points[-2])
 
+  # For i going from n - 2 downto 1
+  for i in range((len(sorted_points) - 3), -1, -1):
+    # Append p_i to lower_hull
+    lower_hull.append(sorted_points[i])
+    # While lower_hull contains three or more points and the last three
+    # points in the lower_hull do not make a right turn do
+    while (len(lower_hull) >= 3) and det(lower_hull[-3], lower_hull[-2], lower_hull[-1]) >= 0:
+      # Delete the middle of the last three points from lower_hull
+      lower_hull.pop(-2)
+
+  # Remove the first and last points for lower_hull to avoid duplication
+  # with points in the upper hull.
+  lower_hull.pop(0) 
+  lower_hull.pop(-1)
+
+  # Append the points in the lower_hull to the points in the upper_hull 
+  # and call those points the convex_hull
+  convex_hull = upper_hull + lower_hull
+
+  # Return the convex_hull.
+  return convex_hull
+      
 # Input: convex_poly is  a list of Point objects that define the
 #        vertices of a convex polygon in order
 # Output: computes and returns the area of a convex polygon
 def area_poly (convex_poly):
-  return
+  x_coords = []
+  y_coords = []
+  for point in convex_poly:
+    x_coords.append(point.x)
+    y_coords.append(point.y)
+  det = 0
+  for i in range(len(convex_poly)):
+    det += (x_coords[i] * y_coords[ (i+1) % (len(convex_poly))] \
+           - y_coords[i] * x_coords[(i+1) % (len(convex_poly))] )
+  area = (1/2) * abs(det)
+  return area
 
 # Input: no input
 # Output: a string denoting all test cases have passed
@@ -136,16 +184,20 @@ def main():
   '''
 
   # get the convex hull
+  convex_poly = convex_hull(sorted_points)
+  print('Convex Hull')
+  # print your results to standard output
+  for point in convex_poly:
+    # print the convex hull
+    print(str(point))
+  print()
 
   # run your test cases
 
-  # print your results to standard output
-
-  # print the convex hull
-
   # get the area of the convex hull
-
   # print the area of the convex hull
+  print('Area of Convex Hull =', area_poly(convex_poly))
+  print()
 
 if __name__ == "__main__":
   main()
