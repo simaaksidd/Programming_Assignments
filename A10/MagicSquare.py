@@ -6,9 +6,9 @@
 
 #  Student's UT EID: jac22779
  
-#  Partner's Name:
+#  Partner's Name: Simaak Siddiqi
 
-#  Partner's UT EID:
+#  Partner's UT EID: srs5826
 
 #  Course Name: CS 313E 
 
@@ -18,29 +18,37 @@
 
 #  Date Last Modified: 
 
-
 #  Input: 1-D list of integers a
 #  Output: returns True if this list is a magic square
 #          or False otherwise
 def is_magic ( a ):
+  n = int(len(a)**0.5)
+  magic_sum = int(n*(((n**2)+1)/2))
+  
+  #check if matrix is 1
+  if n == 1:
+    return a[0] == 1
+
   # checks rows
-  for i in range(3):
-    rowSum = sum(a[(i*3):((i+1)*3)])
-    if rowSum != 15:
-       return False
+  for i in range(n):
+    rowSum = sum(a[(i*n):((i+1)*n)])
+    if rowSum != magic_sum:
+      return False
 
   # checks cols
-  for i in range(3):
-     colSum = a[i] + a[3+i] + a[6+i]
-     if colSum != 15:
-        return False
+  for i in range(n):
+    colSum = 0
+    for j in range(n): 
+      colSum += a[n*j + i] 
+    if colSum != magic_sum:
+      return False
 
   # checks diags
-  diagList = []
-  for i in range(2):
-    diagSum = a[i*2] + a[4] + a[8 - (2*i)]
-    if diagSum != 15:
-       return False
+  diagSum = 0
+  for i in range(n):
+    diagSum += a[i*(n+1)]
+  if diagSum != magic_sum:
+    return False
     
   # returns True if passes through all loops successfully 
   return True
@@ -84,17 +92,27 @@ def permute ( a, idx ):
 #  Input: 1-D list of integers a
 #  Output: prints this as a 2-D list
 def print_square ( a ):
-  square = reshape(a)
-  print(square)
+  n = int(len(a)**0.5)
+  sq = reshape(a)
+  for i in range(n):
+    for j in range(n):
+      if j == (n-1):
+        print(sq[i][j])
+      else:
+        print(sq[i][j], end=' ')
+
 
 #  Input: 1-D list of integers a
 #  Output: returns a 2-D list
 def reshape ( a ):
+  n = int(len(a)**0.5)
+  if n == 1:
+    return [a]
   square = []
-  for i in range(3):
+  for i in range(n):
     row = []
-    for j in range(3):
-      row.append(a[3*i+j])
+    for j in range(n):
+      row.append(a[n*i+j])
     square.append(row)
   return square
 
