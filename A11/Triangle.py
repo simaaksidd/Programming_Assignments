@@ -63,9 +63,17 @@ def greedy (grid):
     sum += nexMax
   return sum
 
+
+def divide_conquer_helper (grid, idx1, idx2):
+  if idx1 == len(grid) - 1:
+    return grid[idx1][idx2]
+  left_sum = divide_conquer_helper(grid, idx1+1, idx2)
+  right_sum = divide_conquer_helper(grid, idx1+1, idx2+1)
+  return grid[idx1][idx2] + max(left_sum, right_sum)
+
 # returns the greatest path sum using divide and conquer (recursive) approach
-def divide_conquer (grid):
-  return
+def divide_conquer (grid) :
+  return divide_conquer_helper(grid, 0, 0)
 
 # returns the greatest path sum and the new grid using dynamic programming
 def dynamic_prog (grid):
