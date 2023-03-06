@@ -27,10 +27,12 @@ import sys
 #         that fit inside each other and the number of such nesting
 #         sets of boxes
 def get_maxs(nesting_list, max_now):
-  if not nesting_list:
+  if len(nesting_list) == 0:
     return 0
-  if nesting_list[0] == max_now:
+  if nesting_list[0] == int(max_now):
     return 1 + get_maxs(nesting_list[1:], max_now)
+  else:
+    return 0 + get_maxs(nesting_list[1:], max_now)
 
 # Input: 2-D list of boxes. Each box of three dimensions is sorted
 #        box_list is sorted
@@ -43,7 +45,24 @@ def nesting_boxes (box_list):
   # a list of nesting boxes. Each index is the number of
   #       boxes which nest in the respective box in box_list
   nesting_list = []
-  
+  for i in range(len(box_list)):
+    # The first box always has the nesting value of one
+    if i == 0:
+      nesting_list.append(1)
+      continue
+    # Find all of the nesting values
+    for j in range(i-1, -1, -1):
+      if does_fit(box_list[j], box_list[i]):
+        nesting_list.append(nesting_list[j]+1)
+        break
+    # If the loop completes and no value is assigned,
+    #     then the nesting value is one
+    if len(nesting_list) != (i+1):
+      nesting_list.append(1)
+
+  max_now = max(nesting_list)
+  print(nesting_list)
+
   return max_now, get_maxs(nesting_list, max_now)
 
 # returns True if box1 fits inside box2
@@ -70,15 +89,15 @@ def main():
     box_list.append (box)
 
   # print to make sure that the input was read in correctly
-  print (box_list)
-  print()
+  #print (box_list)
+  #print()
 
   # sort the box list
   box_list.sort()
 
   # print the box_list to see if it has been sorted.
-  print (box_list)
-  print()
+  #print (box_list)
+  #print()
 
   # get the maximum number of nesting boxes and the
   # number of sets that have that maximum number of boxes
