@@ -1,6 +1,8 @@
 #  File: MagicSquare.py
 
-#  Description: This program generates all 3x3 magic squares
+#  Description: This program generates all 3x3 magic squares and 
+#          checks if any nxn square is a magic square. It also turns 1D 
+#          matricies in to nxn matrices and prints them neatly. 
 
 #  Student's Name: Julian Canales
 
@@ -16,7 +18,7 @@
 
 #  Date Created: 2/25/2023
 
-#  Date Last Modified: 
+#  Date Last Modified: 2/27/2023
 
 #  Input: 1-D list of integers a
 #  Output: returns True if this list is a magic square
