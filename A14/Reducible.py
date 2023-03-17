@@ -62,8 +62,8 @@ def step_size (s, const):
 def insert_word (s, hash_table):
   size = len(hash_table)
   hash_idx = hash_word(s, size)
-  if hash_table[hash_idx % size] == '':
-    hash_table[hash_idx % size] = s
+  if hash_table[hash_idx] == '':
+    hash_table[hash_idx] = s
   else:
     ss = step_size(s, 11)
     while True:
@@ -78,7 +78,9 @@ def insert_word (s, hash_table):
 def find_word (s, hash_table):
   size = len(hash_table)
   hash_idx = hash_word(s, size)
-  if hash_table[hash_idx % size] == s:
+  if hash_table[hash_idx] == '':
+    return False
+  elif hash_table[hash_idx] == s:
     return True
   else:
     count = 1
@@ -87,8 +89,12 @@ def find_word (s, hash_table):
       hash_idx += ss
       if hash_table[hash_idx % size] == s:
         return True
+      elif hash_table[hash_idx % size] == '':
+        return False
       count += 1
     return False
+
+ #I'm not getting indexing errors but the while loop is sketchy because we have to search the entire list every time. 
 
 # Input: string s, a hash table, and a hash_memo 
 #        recursively finds if the string is reducible
@@ -144,6 +150,11 @@ def main():
   # for collisions use double hashing 
   for word in word_list:
     insert_word(word, hash_list)
+
+  num_occupied = sum(1 for slot in hash_list if slot != '')
+  load_factor = num_occupied / len(hash_list)
+  print(f"Load factor: {load_factor:.2f}")
+
 
   # create an empty hash_memo of size M
   # we do not know a priori how many words will be reducible
