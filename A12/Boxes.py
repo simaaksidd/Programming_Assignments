@@ -26,13 +26,14 @@ import sys
 # Output: function returns the , the maximum number of boxes
 #         that fit inside each other and the number of such nesting
 #         sets of boxes
-def get_maxs(nesting_list, max_now):
-  if len(nesting_list) == 0:
-    return 0
-  if nesting_list[0] == int(max_now):
-    return 1 + get_maxs(nesting_list[1:], max_now)
+def get_subsets(nesting_list, box_list, ni, largest):
+  if ni == 0:
+    return []
   else:
-    return 0 + get_maxs(nesting_list[1:], max_now)
+    for i in range(0, largest):
+      if nesting_list[i] == ni and does_fit(box_list[i], box_list[largest]):
+        return [box_list[i]] + get_subsets(nesting_list, box_list, ni-1, largest)
+
 
 # Input: 2-D list of boxes. Each box of three dimensions is sorted
 #        box_list is sorted
@@ -44,6 +45,7 @@ def nesting_boxes (box_list):
   max_now = 0 
   # a list of nesting boxes. Each index is the number of
   #       boxes which nest in the respective box in box_list
+  memo = []
   nesting_list = []
   for i in range(len(box_list)):
     # The first box always has the nesting value of one
@@ -61,9 +63,10 @@ def nesting_boxes (box_list):
       nesting_list.append(1)
 
   max_now = max(nesting_list)
+  hmm = get_subsets(nesting_list, box_list, max_now-1, nesting_list.index(max_now))
   print(nesting_list)
-
-  return max_now, get_maxs(nesting_list, max_now)
+  print(hmm)
+  return max_now, 1
 
 # returns True if box1 fits inside box2
 def does_fit (box1, box2):
@@ -89,25 +92,27 @@ def main():
     box_list.append (box)
 
   # print to make sure that the input was read in correctly
-  #print (box_list)
-  #print()
+  print (box_list)
+  print()
 
   # sort the box list
   box_list.sort()
 
   # print the box_list to see if it has been sorted.
-  #print (box_list)
-  #print()
+  print (box_list)
+  print()
 
   # get the maximum number of nesting boxes and the
   # number of sets that have that maximum number of boxes
-  max_boxes, num_sets = nesting_boxes (box_list)
+  #max_boxes, num_sets = nesting_boxes (box_list)
+
+  fishy = nesting_boxes(box_list)
 
   # print the largest number of boxes that fit
-  print (max_boxes)
+  #print (max_boxes)
 
   # print the number of sets of such boxes
-  print (num_sets)
+  #print (num_sets)
 
 if __name__ == "__main__":
   main()
