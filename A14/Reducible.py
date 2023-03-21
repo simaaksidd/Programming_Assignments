@@ -16,7 +16,7 @@
 
 #  Date Created: 3/16/2023
 
-#  Date Last Modified: 
+#  Date Last Modified: 3/20/2023
 
 import sys
 
@@ -57,20 +57,22 @@ def step_size (s, const):
 # Output: no output; the function enters the string in the hash table, 
 #         it resolves collisions by double hashing
 
-###########################################################################
 
 def insert_word (s, hash_table):
   size = len(hash_table)
   hash_idx = hash_word(s, size)
   if hash_table[hash_idx] == '':
     hash_table[hash_idx] = s
+    return
   else:
     ss = step_size(s, 11)
+    level = 1
     while True:
-      hash_idx += ss
-      if hash_table[(hash_idx % size)] == '':
-        hash_table[(hash_idx % size)] = s
+      hash_idx = (hash_idx + (level * ss)) % size
+      if hash_table[hash_idx] == '':
+        hash_table[hash_idx] = s
         return
+      level += 1
 
 # Input: takes as input a string and a hash table 
 # Output: returns True if the string is in the hash table 
@@ -78,51 +80,50 @@ def insert_word (s, hash_table):
 def find_word (s, hash_table):
   size = len(hash_table)
   hash_idx = hash_word(s, size)
-  if hash_table[hash_idx] == '':
-    return False
-  elif hash_table[hash_idx] == s:
+  if hash_table[hash_idx] == s:
     return True
-  else:
-    count = 1
+  elif hash_table[hash_idx] != '':
+    level = 1
     ss = step_size(s, 11)
-    while count < size:
-      hash_idx += ss
-      if hash_table[hash_idx % size] == s:
+    hash_idx = (hash_idx + (level * ss)) % size
+    while hash_table[hash_idx] != '':
+      if hash_table[hash_idx] == s:
         return True
-      elif hash_table[hash_idx % size] == '':
-        return False
-      count += 1
-    return False
+      level += 1
+      hash_idx = (hash_idx + (level * ss)) % size
+  return False
 
- #I'm not getting indexing errors but the while loop is sketchy because we have to search the entire list every time. 
+ # return False because string == ' ', but Idk if it messes up for other cases. 
 
 # Input: string s, a hash table, and a hash_memo 
 #        recursively finds if the string is reducible
 # Output: if the string is reducible it enters it into the hash memo 
 #         and returns True and False otherwise
 def is_reducible (s, hash_table, hash_memo):
-  # If s is in hash memo, then we know that s is reductible
-  if find_word(s, hash_memo):
+  # Base case was a, i, and o.
+  if s == 'a' or s == 'i' or s == 'o':
     return True
-  elif s == 'a' or s == 'i' or s == 'o':
-    insert_word(s, hash_memo)
+  elif find_word(s, hash_memo):
     return True
-  else:
+  elif find_word(s, hash_table):
     for i in range(len(s)):
       reduct = (s[0:i] + s[(i+1):])
-      if find_word(reduct, hash_table):
-        return is_reducible(reduct, hash_table, hash_memo)
-    return False
-##################################################################### 
+      if is_reducible(reduct, hash_table, hash_memo):
+        insert_word(s, hash_memo)
+        return True
+  return False
 
 # Input: string_list a list of words
 # Output: returns a list of words that have the maximum length
 def get_longest_words (string_list):
   max_words = []
-  length = max(string_list)
+  length = len(max(string_list, key=len))
   for i in range(len(string_list)):
     if len(string_list[i]) == length:
       max_words.append(string_list[i])
+  
+  #idk if sort is needed but who cares about time complexity!
+  max_words.sort()
   return max_words
 
 def main():
@@ -138,7 +139,7 @@ def main():
 
   # determine prime number N that is greater than twice
   # the length of the word_list
-  N = 2 * num_words
+  N = 2 * num_words + 1
   while not is_prime(N):
     N += 1
 
@@ -151,17 +152,13 @@ def main():
   for word in word_list:
     insert_word(word, hash_list)
 
-  num_occupied = sum(1 for slot in hash_list if slot != '')
-  load_factor = num_occupied / len(hash_list)
-  print(f"Load factor: {load_factor:.2f}")
-
 
   # create an empty hash_memo of size M
   # we do not know a priori how many words will be reducible
   # let us assume it is 10 percent (fairly safe) of the words
   # then M is a prime number that is slightly greater than 
   # 0.2 * size of word_list
-  M = int(0.2 * num_words)
+  M = int(0.2 * num_words) + 1
   while not is_prime(M):
     M += 1
   # populate the hash_memo with M blank strings
@@ -184,9 +181,6 @@ def main():
   largest_reducts = get_longest_words(reductibles)
     
   # print the reducible words in alphabetical order
-  
-  #idk if I need this
-  #largest_reducts.sort()
   
   # one word per line
   for word in largest_reducts:
